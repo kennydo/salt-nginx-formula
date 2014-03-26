@@ -21,6 +21,8 @@ This state installs the prebuilt package for nginx provided by the Linux distro'
 --------------------------
 This state installs the nginx package provided by `nginx.org <http://wiki.nginx.org/Install>`_, which is more up-to-date than the packages provided by the distros.
 
+Note that not all distributions have packages from nginx.org. For example, nginx.org does not provide packages for Fedora, so this state should not be used for such distributions.
+
 ``nginx.config``
 ----------------
 This state populates the central ``nginx.conf`` configuration file based on the ``nginx_config`` pillar. The default nginx configuration file includes things in ``conf.d`` and sometimes ``sites-enabled``, but you can just put everything inside the ``nginx_config`` pillar for simplicity.
