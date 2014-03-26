@@ -1,5 +1,9 @@
 nginx_config:
+{% if grains['os_family'] == 'Debian' %}
   - user: www-data
+{% elif grains['os_family'] == 'RedHat' %}
+  - user: nginx
+{% endif %}
   - worker_processes: 4
   - pid: /var/run/nginx.pid
   - events:
