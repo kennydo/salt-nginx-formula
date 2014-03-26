@@ -1,0 +1,38 @@
+{% set nginx = salt['grains.filter_by']({
+    'Debian': {
+        'package': 'nginx-full',
+        'service': 'nginx',
+    },
+    'RedHat': {
+        'package': 'nginx',
+        'service': 'nginx',
+    },
+}, merge=salt['pillar.get']('nginx:lookup')) %}
+
+{#
+Since the arguments for kpgrepo are different for apt-based and yum-based
+systems, the nginx_repo dictionary will be different depending on the
+'os_family' grain.
+#}
+{% set nginx_repo = salt['grains.filter_by']({
+    'Debian': {
+        'name': 'deb http://nginx.org/packages/debian/ ' + grains['oscodename']  + ' nginx',
+        'key_url': 'http://nginx.org/keys/nginx_signing.key',
+    },
+    'RedHat': {
+        'name': 'nginx',
+        'humanname': 'nginx.org Repository',
+        'baseurl': 'http://nginx.org/packages/rhel/$releasever/$basearch/',
+    },
+}, merge=salt['grains.filter_by']({
+    'CentOS': {
+        'baseurl': 'http://nginx.org/packages/centos/$releasever/$basearch/',
+    },
+    'Ubuntu': {
+        'name': 'deb http://nginx.org/packages/ubuntu/ ' + grains['oscodename']  + ' nginx',
+    },
+    'Fedora': {
+        'humanname': 'Regular Fedora Repository',
+        'mirrorlist': 'https://mirrors.fedoraproject.org/metalink?repo=fedora-$releasever&arch=$basearch',
+    },
+}, grain='os', merge=salt['pillar.get']('nginx_repo:lookup'))) %}
