@@ -27,10 +27,16 @@ Note that not all distributions have packages from nginx.org. For example, nginx
 ----------------
 This state populates the central ``nginx.conf`` configuration file based on the ``nginx_config`` pillar. The default nginx configuration file includes things in ``conf.d`` and sometimes ``sites-enabled``, but you can just put everything inside the ``nginx_config`` pillar for simplicity.
 
+``nginx.confd``
+---------------
+This state manages the config files inside nginx's ``conf.d`` directory based on the ``nginx_confd`` pillar. ``nginx_confd`` is a dictionary mapping filename (to be placed in the ``conf.d`` directory) to the desired contents of that file.
+Beware that enabling this state deletes all but the files that saltstack creates in this directory.
 
 Configuration
 =============
-The ``pillar.example`` is based on the default nginx configuration on Debian Squeeze. Note that instead of having ``nginx.conf`` include ``sites-enabled/*``, I just included the configuration into ``nginx.conf`` itself for simplicity. If you want the modularity given by sites-enabled and conf.d, you can maintain those separately from this formula, and just add lines in nginx_config to include those directories.
+The ``pillar.example`` is based on the default nginx configuration on Debian Squeeze. Note that instead of having ``nginx.conf`` include ``sites-enabled/*``, I just included the configuration into ``nginx.conf`` itself for simplicity. If you want the modularity given by ``sites-enabled`` and ``conf.d``, you can maintain those separately from this formula, and just add lines in nginx_config to include those directories.
+
+By using the ``nginx.confd`` state, you can have salt manage configuration files within this directory. Note that you have to have a line like "include /etc/nginx/conf.d/*.conf" in your ``nginx.conf``.
 
 .. note::
 
