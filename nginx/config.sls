@@ -8,6 +8,8 @@ nginx_config:
     - name: {{ nginx.config }}
     - source: {{ nginx.config_src }}
     - template: jinja
+    - context:
+        config_pillar_get_path: "nginx_config"
     - user: root
     - group: root
     - mode: 644
